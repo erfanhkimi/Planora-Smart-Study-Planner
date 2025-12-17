@@ -63,15 +63,6 @@
             <div class="hero-content">
                 <div class="hero-title">Clear<br>Cluttered<br>Schedules</div>
                 
-                <div class="paper-plane">
-                    <div class="plane-wing"></div>
-                    <div class="plane-body"></div>
-                </div>
-
-                <div class="dotted-line"></div>
-                <div class="dot dot1"></div>
-                <div class="dot dot2"></div>
-                <div class="dot dot3"></div>
             </div>
         </div>
     </div>
