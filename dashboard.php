@@ -205,7 +205,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 
-   // AI SCHEDULER
+// AI SCHEDULER
  
    if (isset($_POST['generate_ai_multiday'])) {
 
@@ -217,7 +217,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($days <= 0 || $total_hours <= 0) {
             header("Location: dashboard.php");
-        exit();
+            exit();
         }
 
     // Hours per day (rounded)
@@ -245,6 +245,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $study_date = date('Y-m-d', strtotime("+$i day"));
 
+        // --- FIX START: Check for existing busy times ---
+        $stmt = $pdo->prepare("
+            SELECT startDateTime, endDateTime 
+            FROM Schedule 
+            WHERE UserID = ? 
+            AND DATE(startDateTime) = ? 
+            AND IsDeleted = 0
+        ");
+        $stmt->execute([$user_id, $study_date]);
+        $existing_schedules = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $busy_times_list = [];
+        foreach ($existing_schedules as $sch) {
+            $start = date('H:i', strtotime($sch['startDateTime']));
+            $end = date('H:i', strtotime($sch['endDateTime']));
+            $busy_times_list[] = "$start to $end";
+        }
+        $busy_context = !empty($busy_times_list) ? implode(", ", $busy_times_list) : "None";
+        // --- FIX END ---
+
         $prompt = "
                 You are a study planner AI.
                 Choose the best study START time.
@@ -254,12 +274,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 Study duration: $hours_per_day hours
                 Allowed time window: $window_start to $window_end
 
+                IMPORTANT: The user is already busy at these times: $busy_context.
+                Select a start time where the $hours_per_day hour duration does NOT overlap with the busy times.
+
                 Respond ONLY in JSON:
                 {\"start\":\"HH:MM\"}
-";
+        ";
 
         $data = [
-            'model' => 'openai/gpt-oss-120b',
+            'model' => 'openai/gpt-oss-120b', 
             'messages' => [
                 ['role' => 'system', 'content' => 'You generate multi-day study schedules'],
                 ['role' => 'user', 'content' => $prompt]
