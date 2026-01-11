@@ -1154,12 +1154,11 @@ if ($total > 0) {
                     <select name="schedule_id" required 
                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
                         <option value="">-- Select a schedule --</option>
-                        <?php foreach ($all_schedules_for_tasks as $schedule): ?>
-                            <option value="<?php echo $schedule['ScheduleID']; ?>">
-                                <?php echo htmlspecialchars($schedule['CourseName'] ?? 'General Study'); ?> - 
-                                <?php echo date('M d, Y g:i A', strtotime($schedule['startDateTime'])); ?>
-                            </option>
-                        <?php endforeach; ?>
+                        <?php foreach ($all_schedules as $schedule): ?> <option value="<?php echo $schedule['ScheduleID']; ?>">
+        <?php echo htmlspecialchars($schedule['CourseName'] ?? 'General Study'); ?> - 
+        <?php echo date('M d, Y g:i A', strtotime($schedule['startDateTime'])); ?>
+    </option>
+<?php endforeach; ?>
                     </select>
                     <p class="text-xs text-gray-500 mt-1">Tasks must be linked to a study schedule</p>
                 </div>
