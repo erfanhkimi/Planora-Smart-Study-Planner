@@ -71,6 +71,23 @@ $stmt = $pdo->prepare("
 $stmt->execute([$user_id, $today]);
 $schedules = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+// Fetch Weekly Schedule (next 7 days)
+$week_start = date('Y-m-d');
+$week_end = date('Y-m-d', strtotime('+7 days'));
+
+$stmt_week = $pdo->prepare("
+    SELECT s.*, c.CourseName
+    FROM Schedule s
+    LEFT JOIN Course c ON s.CourseID = c.CourseID
+    WHERE s.UserID = ?
+      AND s.IsDeleted = 0
+      AND s.ScheduleStatus != 'completed'
+      AND DATE(s.startDateTime) BETWEEN ? AND ?
+    ORDER BY s.Deadlines ASC, s.startDateTime ASC
+");
+$stmt_week->execute([$user_id, $week_start, $week_end]);
+$weekly_schedules = $stmt_week->fetchAll(PDO::FETCH_ASSOC);
+
 // 4. HANDLE FORM SUBMISSIONS (POST)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
