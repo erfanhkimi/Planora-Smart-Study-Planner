@@ -710,7 +710,7 @@ if ($total > 0) {
                 <!-- Today's Schedule -->
                 <div class="bg-white rounded-3xl shadow-lg p-6 border border-purple-100">
                     <h3 class="text-xl font-semibold text-purple-900 mb-4 text-center">
-                        Today's Study Scheduleeeee
+                        Today's Study Schedule
                     </h3>
                     <?php if (count($schedules) > 0): ?>
                         <div class="space-y-3">
