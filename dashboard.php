@@ -564,10 +564,6 @@ $stmt = $pdo->prepare("SELECT t.*, tr.completionRates, tr.TrackerID FROM Task t 
 $stmt->execute([$user_id, $user_id]);
 $tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$stmt = $pdo->prepare("SELECT SUM(studyHours) as total_hours, AVG(completionRates) as avg_completion FROM Tracker WHERE UserID = ?");
-$stmt->execute([$user_id]);
-$tracker_stats = $stmt->fetch(PDO::FETCH_ASSOC);
-$total_study_hours = $tracker_stats['total_hours'] ?? 0;
 $stmt = $pdo->prepare("
     SELECT
         COUNT(*) AS total,
@@ -714,7 +710,7 @@ if ($total > 0) {
                 <!-- Today's Schedule -->
                 <div class="bg-white rounded-3xl shadow-lg p-6 border border-purple-100">
                     <h3 class="text-xl font-semibold text-purple-900 mb-4 text-center">
-                        Today's Study Schedule
+                        Today's Study Scheduleeeee
                     </h3>
                     <?php if (count($schedules) > 0): ?>
                         <div class="space-y-3">
@@ -957,10 +953,6 @@ if ($total > 0) {
                                 <span class="text-3xl font-bold text-purple-900"><?php echo $weekly_progress; ?>%</span>
                             </div>
                         </div>
-                    </div>
-                    <div class="text-center mb-4">
-                        <div class="text-2xl font-bold text-purple-900"><?php echo $total_study_hours; ?> hrs</div>
-                        <div class="text-sm text-gray-600">Total Study Time</div>
                     </div>
                     <div class="bg-purple-50 rounded-xl p-4 text-sm text-purple-700">
                         💡 Focus tip - Study the hardest subject first while your mind is fresh
