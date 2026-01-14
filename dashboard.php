@@ -64,7 +64,7 @@ $stmt = $pdo->prepare("
       AND s.IsDeleted = 0
       AND s.ScheduleStatus != 'completed'
       AND DATE(s.startDateTime) = ?
-    ORDER BY s.startDateTime ASC
+    ORDER BY s.Deadlines ASC, s.startDateTime ASC
 ");
 
 
